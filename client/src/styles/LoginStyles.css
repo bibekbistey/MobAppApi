@@ -1,0 +1,48 @@
+/* LoginStyles.css */
+
+.login-page {
+  display: flex;
+  height: 100vh;
+}
+
+.image-container {
+  flex: 1;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.image-container img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.form-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-form {
+  width: 400px;
+  padding: 20px;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.m-2 {
+  margin: 0 0.5rem;
+}
+.background-image {
+  min-width: 100%; /* Makes the image cover the container horizontally */
+  min-height: 100%; /* Makes the image cover the container vertically */
+  object-fit: cover; /* Ensures the image covers the container while maintaining aspect ratio */
+}
