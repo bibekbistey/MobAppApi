@@ -46,7 +46,13 @@ const loginController = async (req, res) => {
         .status(200)
         .send({ message: "Invalid Email or Password", success: false });
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const payload = {
+      id: user.id,
+      email: user.email,
+      name:user.name,
+      role: user.role,
+    };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
     res.status(200).send({ message: "Login Success", success: true, token });
@@ -55,97 +61,6 @@ const loginController = async (req, res) => {
     res.status(500).send({ message: `Error in Login CTRL ${error.message}` });
   }
 };
-
-
-
-// const loginController = async (req, res) => {
-//   try {
-//     const user = await userModel.findOne({ email: req.body.email });
-//     if (!user) {
-//       return res
-//         .status(200)
-//         .send({ message: "user not found", success: false });
-//     }
-//     const isMatch = await bcrypt.compare(req.body.password, user.password);
-//     if (!isMatch) {
-//       return res
-//         .status(200)
-//         .send({ message: "Invalid Email or Password", success: false });
-//     }
-//     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-//       expiresIn: "1d",
-//     });
-//     res.status(200).send({ message: "Login Success", success: true, token });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send({ message: `Error in Login CTRL ${error.message}` });
-//   }
-// };
-
-
-// const loginController = async (req, res) => {
-//   try {
-//     const user = await userModel.findOne({ email: req.body.email });
-//     if (!user) {
-//       return res.status(200).send({ message: "user not found", success: false });
-//     }
-
-//     const isMatch = await bcrypt.compare(req.body.password, user.password);
-//     if (!isMatch) {
-//       return res.status(200).send({ message: "Invalid Email or Password", success: false });
-//     }
-
-//     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-//       expiresIn: "1d",
-//     });
-
-//      // Check if the user is an admin
-//      if (user.isAdmin) {
-//       return res.status(200).send({ message: " logged in as admin", success: true,token });
-//     }
-
-//     if (isMatch) {
-//       return res.status(200).send({ message: "LogIn Success", success: true, token });
-//     }   
-
-//     // res.status(200).send({ message: "Login Success", success: true, token });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send({ message: `Error in Login CTRL ${error.message}` });
-//   }
-// };
-
-
-
-
-
-// const loginController = async (req, res) => {
-//   try {
-//     const user = await userModel.findOne({ email: req.body.email });
-//     if (!user) {
-//       return res.status(200).send({ message: "user not found", success: false });
-//     }
-
-//     const isMatch = await bcrypt.compare(req.body.password, user.password);
-//     if (!isMatch) {
-//       return res.status(200).send({ message: "Invalid Email or Password", success: false });
-//     }
-
-//     let isAdmin = user.isAdmin;
-
-//     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-//       expiresIn: "1d",
-//     });
-
-//     res.status(200).send({ message: "Login Success", success: true, isAdmin, token });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send({ message: `Error in Login CTRL ${error.message}` });
-//   }
-// };
-
-
-
 
 const authController = async (req, res) => {
   try {
@@ -220,7 +135,8 @@ const profileController = async (req, res) => {
   }
 };
 
-// APpply DOctor CTRL
+
+// Appply for Doctor 
 const applyDoctorController = async (req, res) => {
   try {
     const newDoctor = await doctorModel({ ...req.body, status: "pending" });
@@ -250,35 +166,7 @@ const applyDoctorController = async (req, res) => {
     });
   }
 };
-// const applyDoctorController = async (req, res) => {
-//   try {
-//     const newDoctor = await doctorModel({ ...req.body, status: "pending" });
-//     await newDoctor.save();
-//     const adminUser = await userModel.findOne({ isAdmin: true });
-//     const notification = adminUser.notification; // Fix the typo here
-//     notification.push({
-//       type: "apply-doctor-request",
-//       message: `${newDoctor.firstName} ${newDoctor.lastName} Has Applied For A Doctor Account`,
-//       data: {
-//         doctorId: newDoctor._id,
-//         name: newDoctor.firstName + " " + newDoctor.lastName,
-//         onClickPath: "/admin/doctors", // Fix the typo in the URL path as well (docotrs -> doctors)
-//       },
-//     });
-//     await userModel.findByIdAndUpdate(adminUser._id,); // Fix the property name here
-//     res.status(201).send({
-//       success: true,
-//       message: "Doctor Account Applied Successfully",
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send({
-//       success: false,
-//       error,
-//       message: "Error While Applying For Doctor",
-//     });
-//   }
-// };
+
 
 
 //notification ctrl
@@ -350,24 +238,6 @@ const getAllDocotrsController = async (req, res) => {
 
 
 // Create a new appointment
-// const createAppointment = async (req, res) => {
-//   try {
-//     const { doctorId, userId, date,time } = req.body;
-
-//     // Create a new appointment
-//     const appointment = new bookingModel({ doctorId, userId, date, time });
-//     await appointment.save();
-
-//     res.status(200).send({
-//       success: true,
-//       message: "Docotr Appointed Successfully",
-//       data: appointment,
-//     });
-//   } catch (err) {
-//     res.status(500).json({ error: 'Could not create the appointment.' });
-//   }
-// };
-
 
 const createAppointment = async (req, res) => {
   try {
@@ -389,16 +259,6 @@ const createAppointment = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Could not create the appointment.' });
     console.log(err);
-  }
-};
-
-// Get all appointments
-exports.getAllAppointments = async (req, res) => {
-  try {
-    const appointments = await Appointment.find();
-    res.status(200).json(appointments);
-  } catch (err) {
-    res.status(500).json({ error: 'Could not fetch appointments.' });
   }
 };
 
@@ -472,7 +332,7 @@ const bookingAvailabilityController = async (req, res) => {
 
 const userAppointmentsController = async (req, res) => {
   try {
-    const appointments = await appointmentModel.find({
+    const appointments = await bookingModel.find({
       userId: req.body.userId,
     });
     res.status(200).send({
