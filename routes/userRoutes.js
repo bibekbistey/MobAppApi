@@ -12,6 +12,7 @@ const {
   userAppointmentsController,
   createAppointment,
   profileController,
+  getAppointmentsByUserId
 } = require("../controllers/userCtrl");
 const authMiddleware = require("../middlewares/authMiddleware");
 
@@ -65,6 +66,9 @@ router.post(
 
 //Appointments List
 router.get("/user-appointments", authMiddleware, userAppointmentsController);
+
+router.get("/appointments/",authMiddleware, getAppointmentsByUserId);
+
 
 
 

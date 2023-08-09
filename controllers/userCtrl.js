@@ -106,7 +106,6 @@ const profileController = async (req, res) => {
         success: false,
       });
     }
-
     // Update the user's profile with the new data from the request body
     // Assuming the properties to update are present in the request body
     user.name = req.body.name;
@@ -263,6 +262,44 @@ const createAppointment = async (req, res) => {
 };
 
 
+//Get
+
+// const getAppointmentsByUserId = async (req, res) => {
+//   try {
+//     const userId = req.params.userId;
+
+//     // Fetch all the appointments for the given userId
+//     const appointments = await bookingModel.find({ userId });
+
+//     res.status(200).send({
+//       success: true,
+//       message: "Appointments fetched successfully",
+//       data: appointments,
+//     });
+//   } catch (err) {
+//     res.status(500).json({ error: 'Could not fetch appointments.' });
+//     console.log(err);
+//   }
+// };
+
+const getAppointmentsByUserId = async (req, res) => {
+  try {
+    const userId = req.params._id;
+
+    // Fetch all the appointments for the given userId
+    const appointments = await bookingModel.find({ userId });
+
+    res.status(200).send({
+      success: true,
+      message: "Appointments fetched successfully",
+      data: appointments,
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Could not fetch appointments.' });
+    console.log(err);
+  }
+};
+
 //BOOK APPOINTMENT
 const bookeAppointmnetController = async (req, res) => {
   try {
@@ -363,4 +400,5 @@ module.exports = {
   bookingAvailabilityController,
   userAppointmentsController,
   profileController,
+  getAppointmentsByUserId,
 };

@@ -4,6 +4,7 @@ const {
   getAllDoctorsController,
   changeAccountStatusController,
   deleteUserController,
+  deleteDoctorController,
 } = require("../controllers/adminCtrl");
 const authMiddleware = require("../middlewares/authMiddleware");
 
@@ -17,6 +18,8 @@ router.get("/getAllDoctors", authMiddleware, getAllDoctorsController);
 
 router.delete("/deleteUsers/:userId", authMiddleware, deleteUserController);
 // router.delete("/deleteUsers", authMiddleware, deleteUserController);
+
+router.delete("/deleteDoctors/:doctorId", authMiddleware, deleteDoctorController);
 
 
 //POST ACCOUNT STATUS
